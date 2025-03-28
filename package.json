@@ -1,6 +1,6 @@
 {
-  "name": "csl-overlay",
-  "version": "2024.2.0",
+  "name": "omln4-overlay",
+  "version": "1.0.0",
   "engines": {
     "node": "18"
   },
@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf dist/",
-    "build": "npm run clean && pkg . && echo @echo off >> dist/csl-overlay.cmd && echo csl-overlay.exe >> dist/csl-overlay.cmd && echo pause >> dist/csl-overlay.cmd",
+    "build": "npm run clean && pkg . && echo @echo off >> dist/omln4-overlay.cmd && echo omln4-overlay.exe >> dist/omln4-overlay.cmd && echo pause >> dist/omln4-overlay.cmd",
     "postinstall": "patch-package",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write ."

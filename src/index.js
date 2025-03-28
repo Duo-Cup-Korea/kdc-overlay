@@ -56,7 +56,7 @@ async function Init() {
     // Run Server
     server.listen(config.port, () => {
       logger.info(
-        `Circles in SEOUL overlay backend server running at http://${ip.address()}:${config.port}/`
+        `osu!mania Long Note Tournament 4 overlay backend server running at http://${ip.address()}:${config.port}/`
       );
     });
   }
