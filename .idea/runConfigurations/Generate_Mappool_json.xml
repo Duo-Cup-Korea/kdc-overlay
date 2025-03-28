@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Generate Mappool.json" type="NodeJSConfigurationType" path-to-node="node" path-to-js-file="$PROJECT_DIR$/scripts/mappoolgen.js" working-dir="$PROJECT_DIR$">
+  <configuration default="false" name="Generate Mappool.json" type="NodeJSConfigurationType" path-to-js-file="scripts/mappoolgen.js" working-dir="$PROJECT_DIR$">
     <method v="2" />
   </configuration>
 </component>
