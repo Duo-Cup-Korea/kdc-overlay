@@ -2,7 +2,7 @@
   "name": "omln4-overlay",
   "version": "1.0.0",
   "engines": {
-    "node": "18"
+    "node": "22"
   },
   "description": "",
   "main": "src/index.js",
@@ -33,9 +33,9 @@
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.10.1",
     "@vue/eslint-config-prettier": "^9.0.0",
+    "@yao-pkg/pkg": "^6.3.2",
     "eslint": "^9.0.0",
     "ncp": "^2.0.0",
-    "pkg": "^5.8.1",
     "prettier": "^3.2.5",
     "rimraf": "^5.0.7"
   },
@@ -50,7 +50,7 @@
       "credentials.json"
     ],
     "targets": [
-      "node18-win-x64"
+      "node22-win-x64"
     ],
     "outputPath": "dist"
   }
