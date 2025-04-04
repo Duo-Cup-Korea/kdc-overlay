@@ -20,15 +20,6 @@ function loadStreamConfig() {
   session.bracket = streamConfig.mappool_name;
   session.schedule = streamConfig.schedule;
   session.stream_title = streamConfig.title;
-  // CSL CSL CSL CSL CSL CSL CSL CSL CSL CSL CSL
-  if (fs.existsSync(path.join(process.cwd(), `history.${streamConfig.match_code}.json`))) {
-    session.CSL.history = JSON.parse(
-      fs.readFileSync(path.join(process.cwd(), `history.${streamConfig.match_code}.json`), {
-        encoding: "utf8",
-        flag: "r",
-      })
-    );
-  }
 }
 
 function loadManualMappool() {

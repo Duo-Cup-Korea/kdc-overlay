@@ -3,7 +3,7 @@ const { v2 } = require("osu-api-extended");
 const { response } = require("express");
 const fs = require("fs");
 const difficultyCalculator = require("./difficultyCalculator");
-const logger = require("winston");
+const logger = require("winston")
 
 let gosuWs;
 let connected = false;
@@ -48,22 +48,9 @@ exports = module.exports = function (config, session) {
       });
     }
 
-    // CSL CSL CSL CSL CSL CSL CSL CSL CSL
-    function saveHistoryFile() {
-      fs.writeFileSync(
-        path.join(process.cwd(), `history.${session.match_code}.json`),
-        JSON.stringify(session.CSL.history)
-      );
-    }
-
     let chatCount = 0;
     let mapIdTemp = 0;
     let modsTemp = -1;
-    // CSL CSL CSL CSL CSL CSL CSL CSL CSL
-    let lastDiffSaveTime = -2000;
-    let recordingDiff = false;
-    // CSL CSL CSL CSL CSL CSL CSL CSL CSL
-    let fetchingBeatmapInfo = false;
     // Set timeout of the connection, as tosu just stops sending data when osu gets closed and
     // silently resumes when opened. With this we can detect situations where osu is restarted.
     let timeout = setTimeout(() => (connected = false), 1000);
@@ -178,26 +165,16 @@ exports = module.exports = function (config, session) {
       // Get original sr from the api
       if (mapIdTemp !== data.menu.bm.id) {
         // Beatmap changed
-        if (!fetchingBeatmapInfo) {
-          logger.info(`[tourney] Beatmap changed to ${data.menu.bm.id}`);
-          fetchingBeatmapInfo = true;
+        let taskDone = true;
 
-          // CSL CSL CSL CSL CSL CSL
-          lastDiffSaveTime = -2000;
-          session.CSL.history[data.menu.bm.id] = {
-            log: [],
-            score: [0, 0],
-            acc: [0, 0],
-            combo: [0, 0],
-            miss: [0, 0],
-          };
+        v2.beatmap.id.attributes(data.menu.bm.id, {}).then((res) => {
+          session.now_playing.osu.stats.sr = res?.attributes?.star_rating;
+          if (!session.now_playing.osu.stats.sr) {
+            taskDone = false;
+          }
+        });
 
-          v2.beatmap.id.attributes(data.menu.bm.id, {}).then((res) => {
-            session.now_playing.osu.stats.sr = res?.attributes?.star_rating;
-            mapIdTemp = data.menu.bm.id;
-            fetchingBeatmapInfo = false;
-          });
-        }
+        if (taskDone) mapIdTemp = data.menu.bm.id;
       }
 
       // If Tourney Mode
@@ -261,76 +238,8 @@ exports = module.exports = function (config, session) {
           data.tourney.manager.gameplay.score.right,
         ];
 
-        /*
-        // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
-        // See the LICENCE file in the repository root for full licence text.
-
-        namespace osu.Game.Tournament.IPC {
-          public enum TourneyState {
-            Initialising,
-            Idle,
-            WaitingForClients,
-            Playing,
-            Ranking
-          }
-        }
-        */
-
         // Get IPCstate
-        if (session.progress.state !== data.tourney.manager.ipcState) {
-          // CSL CSL CSL CSL CSL CSL CSL CSL CSL
-          const oldState = session.progress.state;
-          const newState = data.tourney.manager.ipcState;
-
-          if (newState === 3) {
-            // Started Playing
-            logger.info(`[tourney] Started playing map ${data.menu.bm.id}!`);
-            recordingDiff = true;
-          } else if (newState === 1) {
-            // Idle
-            logger.info(`[tourney] osu!tourney now idle!`);
-            recordingDiff = false;
-          } else if (newState === 4) {
-            // Ranking
-            logger.info(`[tourney] Finished playing the map!`);
-            recordingDiff = false;
-            if (true) {
-              session.CSL.history[data.menu.bm.id].score = data.tourney.ipcClients.map(
-                (x) => x.gameplay.score
-              );
-              session.CSL.history[data.menu.bm.id].acc = data.tourney.ipcClients.map(
-                (x) => x.gameplay.accuracy
-              );
-              session.CSL.history[data.menu.bm.id].combo = data.tourney.ipcClients.map(
-                (x) => x.gameplay.combo.max
-              );
-              session.CSL.history[data.menu.bm.id].miss = data.tourney.ipcClients.map(
-                (x) => x.gameplay.hits[0]
-              );
-              saveHistoryFile();
-            }
-          }
-
-          session.progress.state = data.tourney.manager.ipcState;
-        }
-
-        const time = data.menu.bm.time.current;
-
-        if (recordingDiff) {
-          if (lastDiffSaveTime > time) {
-            while (session.CSL.history[data.menu.bm.id].log.pop()?.[0] > time);
-            lastDiffSaveTime = time;
-          }
-
-          if (lastDiffSaveTime + 1000 <= time) {
-            session.CSL.history[data.menu.bm.id].log.push([
-              time,
-              data.tourney.ipcClients[0].gameplay.score - data.tourney.ipcClients[1].gameplay.score,
-            ]);
-            lastDiffSaveTime = time;
-            saveHistoryFile();
-          }
-        }
+        session.progress.state = data.tourney.manager.ipcState;
       }
 
       // We are now connected as we received data just now
