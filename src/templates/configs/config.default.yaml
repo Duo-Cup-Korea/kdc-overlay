@@ -1,0 +1,22 @@
+# Overlay Server Port
+port: 3000
+
+# Stream Data Sheet
+sheet: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# osu!api v2
+clientID: 0
+clientSecret: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+
+# Gosumemory
+gosumemoryHost: "127.0.0.1"
+gosumemoryPort: 24050
+
+# foobar2000
+fb2k:
+  beefweb:
+    host: "127.0.0.1"
+    port: 8880
+  controlserver:
+    host: "127.0.0.1"
+    port: 3333

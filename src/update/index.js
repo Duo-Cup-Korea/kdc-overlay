@@ -1,6 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 const chokidar = require("chokidar");
+const yaml = require("js-yaml");
 const logger = require("winston");
 const controls = require("./controls");
 const SpreadsheetManager = require("./spreadsheets");
@@ -10,8 +11,9 @@ const session = require("../templates/session");
 
 function loadStreamConfig() {
   logger.info("streamConfig file updated!");
-  delete require.cache[path.join(process.cwd(), "streamConfig.js")];
-  const streamConfig = require(path.join(process.cwd(), "streamConfig.js"));
+  const streamConfig = yaml.load(
+    fs.readFileSync(path.join(process.cwd(), "config_stream.yaml"), { encoding: "utf8", flag: "r" })
+  );
   session.type = streamConfig.type;
   session.match_code = streamConfig.match_code;
   session.mappool_name = streamConfig.mappool_name;
@@ -57,7 +59,7 @@ exports = module.exports = function (config, io) {
 
   // Load streamConfig values and try to get mappool data from mappool.json
   // Update data whenever the files are changed
-  chokidar.watch(path.join(process.cwd(), "streamConfig.js")).on("all", () => {
+  chokidar.watch(path.join(process.cwd(), "config_stream.yaml")).on("all", () => {
     loadStreamConfig();
     sheets.matchChanged();
   });

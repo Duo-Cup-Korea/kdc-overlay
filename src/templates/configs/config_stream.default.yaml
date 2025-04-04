@@ -1,0 +1,10 @@
+# Stream type: match | showcase | other
+type: "match"
+
+# For match streaming
+match_code: ""
+mappool_name: "Mappool 1"
+
+# For showcase streaming
+schedule: "2023-05-21T01:00:00+09:00"
+title: ""
