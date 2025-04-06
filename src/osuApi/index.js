@@ -14,7 +14,7 @@ exports = module.exports = function (config) {
     } else {
       logger.error("osu!api authentication failure");
       logger.error(
-        "Please check if your client ID and secret you entered in config.js are correct.\n"
+        "Please check if your client ID and secret you entered in config.yaml are correct.\n"
       );
     }
   }
