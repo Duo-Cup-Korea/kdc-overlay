@@ -169,7 +169,7 @@ exports = module.exports = function (config, session) {
         // Beatmap changed
         let taskDone = true;
 
-        v2.beatmap.id.attributes(data.menu.bm.id, {}).then((res) => {
+        v2.beatmaps.details({ type: "difficulty", id: data.menu.bm.id }).then((res) => {
           session.now_playing.osu.stats.sr = res?.attributes?.star_rating;
           if (!session.now_playing.osu.stats.sr) {
             taskDone = false;

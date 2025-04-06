@@ -84,7 +84,15 @@ class SpreadsheetManager {
 
     for (let i = 0; i < teamsData.length; i++) {
       for (let j = 0; j < 2; j++) {
-        const playerdata = await v2.user.details(teamsData[i].players[j].id);
+        if (!teamsData[i].players[j].id) continue;
+        logger.verbose(
+          `[Spreadsheets] Querying rank and pp of player id ${teamsData[i].players[j].id}`
+        );
+        const playerdata = await v2.users.details({
+          user: teamsData[i].players[j].id,
+          mode: "osu",
+          key: "id",
+        });
         teamsData[i].players[j].rank = playerdata.statistics.global_rank;
         teamsData[i].players[j].pp = playerdata.statistics.pp;
       }

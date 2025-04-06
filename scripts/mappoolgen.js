@@ -22,7 +22,7 @@ const call = async () => {
   await auth.login(config.clientID, config.clientSecret, SCOPE_LIST);
 
   for (const code of Object.keys(maps)) {
-    const data = await v2.beatmap.id.details(maps[code]);
+    const data = await v2.beatmaps.details({ type: "difficulty", id: maps[code] });
     mappool.push({
       map_id: maps[code],
       mapset_id: data.beatmapset_id,

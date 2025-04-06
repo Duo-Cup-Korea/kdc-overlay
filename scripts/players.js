@@ -24,7 +24,7 @@ const call = async () => {
 
   for (let i = 0; i < uids.length; i++) {
     console.log("Requesting user " + uids[i] + "...");
-    const data = await v2.user.details(uids[i]);
+    const data = await v2.users.details({ user: uids[i], mode: "osu", key: "id" });
     players[data.username] = data;
   }
 };

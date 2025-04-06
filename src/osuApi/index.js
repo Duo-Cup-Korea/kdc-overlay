@@ -1,21 +1,30 @@
 const { v2, auth } = require("osu-api-extended");
+const path = require("path");
 const logger = require("winston");
+
+const osuApiTokenCachePath = path.join(process.cwd(), "credentials_osuapi.json");
 
 exports = module.exports = function (config) {
   // You need to login only once on application start (auto renew token for v2)
   // https://github.com/cyperdark/osu-api-extended
-  async function authenticate() {
-    const SCOPE_LIST = ["public"];
 
-    await auth.login(config.clientID, config.clientSecret, SCOPE_LIST);
-    const data = await v2.beatmap.id.details(75);
-    if (data.beatmapset_id === 1) {
-      logger.info("osu!api authentication success!");
-    } else {
-      logger.error("osu!api authentication failure");
-      logger.error(
-        "Please check if your client ID and secret you entered in config.yaml are correct.\n"
-      );
+  async function authenticate() {
+    try {
+      await auth.login({
+        type: "v2",
+        client_id: config.clientID,
+        client_secret: config.clientSecret,
+        cachedTokenPath: osuApiTokenCachePath, // path to the file your auth token will be saved (to prevent osu!api spam)
+      });
+
+      const result = await v2.users.details({ user: "peppy", mode: "osu", key: "@" });
+      if (result?.id === 2) {
+        logger.info("[osu!api] Authentication success!");
+      } else {
+        logger.error("[osu!api] Authentication failure");
+      }
+    } catch (error) {
+      logger.error(error);
     }
   }
 

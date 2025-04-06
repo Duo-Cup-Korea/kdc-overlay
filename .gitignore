@@ -134,6 +134,7 @@ config_stream.yaml
 mappool.csv
 mappool.json
 credentials.json
+credentials_osuapi.json
 public/
 logs/
 people.csv

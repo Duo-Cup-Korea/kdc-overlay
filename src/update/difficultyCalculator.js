@@ -84,9 +84,7 @@ exports = module.exports = (function () {
 
     // get star rating from the osu api
     if (ez || hr || dt || ht) {
-      const attributes = await v2.beatmap.id.attributes(mapId, {
-        mods: modsNum,
-      });
+      const attributes = await v2.beatmaps.lookup({ type: "attributes", id: mapId, mods: modsNum });
       if (!attributes.hasOwn("authentication") && attributes.hasOwn("difficulty_rating")) {
         sr = attributes.difficulty_rating;
       }
