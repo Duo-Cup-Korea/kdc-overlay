@@ -23,7 +23,7 @@
     "date-fns": "^4.1.0",
     "express": "^5.1.0",
     "googleapis": "^148.0.0",
-    "internal-ip": "<8.0.0",
+    "ip": "^2.0.1",
     "js-yaml": "^4.1.0",
     "osu-api-extended": "^3.0.19",
     "patch-package": "^8.0.0",

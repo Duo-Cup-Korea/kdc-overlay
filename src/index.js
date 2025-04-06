@@ -1,7 +1,7 @@
 const http = require("http");
 const yaml = require("js-yaml");
 const express = require("express");
-const internalIp = require("internal-ip");
+const ip = require("ip");
 const app = express();
 const server = http.createServer(app);
 const { Server } = require("socket.io");
@@ -59,7 +59,7 @@ async function Init() {
     // Run Server
     server.listen(config.port, () => {
       logger.info(
-        `osu!mania Long Note Tournament 4 overlay backend server running at http://${internalIp.internalIpV4Sync()}:${config.port}/`
+        `osu!mania Long Note Tournament 4 overlay backend server running at http://${ip.address()}:${config.port}/`
       );
     });
   }
