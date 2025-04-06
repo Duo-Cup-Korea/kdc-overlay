@@ -44,7 +44,7 @@ async function Init() {
     );
 
     // osu!api (v2) init
-    require("./osuAPI")(config);
+    require("./osuApi")(config);
 
     // Static Folder
     app.use("/", express.static(path.join(__dirname, "../public")));
