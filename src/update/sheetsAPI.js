@@ -1,5 +1,5 @@
-const logger = require("winston");
-const { delay, waitForCondition } = require("../globs/globs");
+// const logger = require("winston");
+const { waitForCondition } = require("../globs/globs");
 
 class SlottedSheetsFetcher {
   constructor(sheets, sheetId, slotDuration = 1100) {

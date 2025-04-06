@@ -1,5 +1,4 @@
 const { v2 } = require("osu-api-extended");
-const { response } = require("express");
 
 exports = module.exports = (function () {
   const ms = {
@@ -88,10 +87,7 @@ exports = module.exports = (function () {
       const attributes = await v2.beatmap.id.attributes(mapId, {
         mods: modsNum,
       });
-      if (
-        !attributes.hasOwnProperty("authentication") &&
-        attributes.hasOwnProperty("difficulty_rating")
-      ) {
+      if (!attributes.hasOwn("authentication") && attributes.hasOwn("difficulty_rating")) {
         sr = attributes.difficulty_rating;
       }
     }

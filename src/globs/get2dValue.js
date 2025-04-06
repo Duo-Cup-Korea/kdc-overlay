@@ -44,7 +44,7 @@ function byIndex(data, index) {
  */
 function byRange(data, range) {
   if (!range) {
-    return get2dValueByIndex(data, []);
+    return byIndex(data, []);
   }
 
   const parsedRange = range.split(":").map((x) => {

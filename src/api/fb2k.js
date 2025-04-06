@@ -68,7 +68,10 @@ exports = module.exports = function (config) {
           logger.info(consolePrefix + "Song Changed!");
           updateAlbumArt();
         }
-        logger.verbose(consolePrefix + (line.length > 500 ? line.substring(0, 500) + "\n(...Excessive output omitted)" : line));
+        logger.verbose(
+          consolePrefix +
+            (line.length > 500 ? line.substring(0, 500) + "\n(...Excessive output omitted)" : line)
+        );
       });
     }
   });
@@ -80,7 +83,7 @@ exports = module.exports = function (config) {
     launchIntervalConnect();
   });
 
-  client.on("error", (err) => {
+  client.on("error", () => {
     if (!intervalConnect) {
       logger.info("foobar2000 control server connection error.");
     }

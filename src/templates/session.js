@@ -1,5 +1,3 @@
-path = require("path");
-
 exports = module.exports = {
   type: "",
   match_code: "",

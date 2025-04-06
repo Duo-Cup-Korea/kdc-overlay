@@ -1,9 +1,10 @@
 const { w3cwebsocket: WebSocket } = require("websocket");
 const { v2 } = require("osu-api-extended");
-const { response } = require("express");
+const path = require("path");
 const fs = require("fs");
+// eslint-disable-next-line no-unused-vars
 const difficultyCalculator = require("./difficultyCalculator");
-const logger = require("winston")
+const logger = require("winston");
 
 let gosuWs;
 let connected = false;
@@ -17,13 +18,13 @@ exports = module.exports = function (config, session) {
       // connected will be updated onmessage
     };
 
-    gosuWs.onclose = (event) => {
+    gosuWs.onclose = () => {
       logger.info("Gosumemory WebSocket Connection closed.");
       connected = false;
       setTimeout(setupGosuWs, 1000);
     };
 
-    gosuWs.onerror = (error) => {
+    gosuWs.onerror = () => {
       logger.error("Gosumemory WebSocket Connection error.");
     };
 
@@ -50,6 +51,7 @@ exports = module.exports = function (config, session) {
 
     let chatCount = 0;
     let mapIdTemp = 0;
+    // eslint-disable-next-line no-unused-vars
     let modsTemp = -1;
     // Set timeout of the connection, as tosu just stops sending data when osu gets closed and
     // silently resumes when opened. With this we can detect situations where osu is restarted.

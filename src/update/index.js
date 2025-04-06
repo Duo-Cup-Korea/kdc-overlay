@@ -40,14 +40,6 @@ exports = module.exports = function (config, io) {
 
   controlHandler.CSL_watchPeopleList();
 
-  // Load debug values
-  if (fs.existsSync(path.join(process.cwd(), "session.js"))) {
-    const manualSession = require(path.join(process.cwd(), "session.js"));
-    for (key in manualSession) {
-      session[key] = manualSession[key];
-    }
-  }
-
   // Load streamConfig values and try to get mappool data from mappool.json
   // Update data whenever the files are changed
   chokidar.watch(path.join(process.cwd(), "config_stream.yaml")).on("all", () => {

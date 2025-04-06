@@ -2,7 +2,6 @@ const path = require("path");
 const { google } = require("googleapis");
 const { v2 } = require("osu-api-extended");
 const get2dValue = require("../globs/get2dValue");
-const delay = require("../globs/globs.js").delay;
 const SlottedSheetsFetcher = require("./sheetsAPI");
 const logger = require("winston");
 const { getRandomInt } = require("../globs/globs.js");

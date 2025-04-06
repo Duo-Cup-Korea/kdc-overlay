@@ -11,7 +11,7 @@
     "clean": "rimraf dist/",
     "build": "npm run clean && pkg --compress GZip . && echo @echo off >> dist/omln4-overlay.cmd && echo omln4-overlay.exe >> dist/omln4-overlay.cmd && echo pause >> dist/omln4-overlay.cmd",
     "postinstall": "patch-package",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "lint": "eslint .",
     "format": "prettier --write ."
   },
   "keywords": [],
@@ -32,12 +32,14 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
-    "@rushstack/eslint-patch": "^1.10.1",
-    "@vue/eslint-config-prettier": "^9.0.0",
+    "@eslint/js": "^9.24.0",
+    "@rushstack/eslint-patch": "^1.11.0",
     "@yao-pkg/pkg": "^6.3.2",
-    "eslint": "^9.0.0",
+    "eslint": "^9.24.0",
+    "eslint-config-prettier": "^10.1.1",
+    "globals": "^16.0.0",
     "ncp": "^2.0.0",
-    "prettier": "^3.2.5",
+    "prettier": "^3.5.3",
     "rimraf": "^5.0.7"
   },
   "bin": {

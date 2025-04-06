@@ -1,7 +1,4 @@
-const { v2, auth } = require("osu-api-extended");
 const fs = require("fs");
-
-const config = require("../config.js");
 
 const players = JSON.parse(
   fs.readFileSync("./players.json", { encoding: "utf8", flag: "r" })

@@ -1,5 +1,3 @@
-const logger = require("winston");
-
 exports = module.exports = class controls {
   constructor(config, session) {
     this.config = config;
