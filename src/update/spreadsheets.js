@@ -1,10 +1,11 @@
 const path = require("path");
 const { google } = require("googleapis");
 const { v2 } = require("osu-api-extended");
-const get2dValue = require("../globs/get2dValue");
-const SlottedSheetsFetcher = require("./sheetsApi");
+const eaw = require("eastasianwidth");
 const logger = require("winston");
-const { getRandomInt } = require("../globs/globs.js");
+
+const SlottedSheetsFetcher = require("./sheetsApi");
+const { getRandomInt, get2dValue } = require("../utils");
 
 const auth = new google.auth.GoogleAuth({
   keyFile: path.join(process.cwd(), "credentials.json"),
@@ -13,6 +14,7 @@ const auth = new google.auth.GoogleAuth({
 const sheets = google.sheets({ version: "v4", auth });
 
 const interval = 1500;
+const consolePrefix = "[Spreadsheets] ";
 
 function getColumnLabels(firstRow) {
   const data = {};
@@ -86,7 +88,7 @@ class SpreadsheetManager {
       for (let j = 0; j < 2; j++) {
         if (!teamsData[i].players[j].id) continue;
         logger.verbose(
-          `[Spreadsheets] Querying rank and pp of player id ${teamsData[i].players[j].id}`
+          consolePrefix + `Querying rank and pp of player id ${teamsData[i].players[j].id}`
         );
         const playerdata = await v2.users.details({
           user: teamsData[i].players[j].id,
@@ -101,7 +103,7 @@ class SpreadsheetManager {
     this.allTeams = allTeamsData;
     this.session.teams = teamsData;
     this.session.CSL.teams = allTeamsData;
-    logger.info(`Found teams ${teams} on sheet!`);
+    logger.info(consolePrefix + `Found teams ${teams} on sheet!`);
   }
 
   async matchChanged() {
@@ -111,20 +113,28 @@ class SpreadsheetManager {
 
     const rows = this.matchInfo;
 
-    logger.info(`Found Match <${this.session.match_code}> on sheet!`);
+    logger.info(consolePrefix + `Found match <${this.session.match_code}> on sheet!`);
     const teamNums = [
       parseInt(get2dValue.byRange(rows, "N4")),
       parseInt(get2dValue.byRange(rows, "S4")),
     ];
-    logger.verbose("Going to query teams " + teamNums);
+    logger.verbose(consolePrefix + "Going to query teams " + teamNums);
+
     await this.updateTeams(teamNums);
     await this.updateMappool(this.session.mappool_name);
-    logger.info(
-      "\n" +
-        "==================== Stream Title ====================\n" +
-        get2dValue.byRange(rows, "W2") +
-        "\n" +
-        "======================================================"
+
+    const streamTitle = get2dValue.byRange(rows, "W2");
+    const titleLen = eaw.length(streamTitle);
+    const lines = [];
+
+    lines.push("┌" + "─".repeat(titleLen - 2) + "┐");
+    lines.push(streamTitle);
+    lines.push("└" + "─".repeat(titleLen - 2) + "┘");
+
+    logger.warn(
+      consolePrefix +
+        "Stream title generated. Copy & paste the following to your streamer dashboard:\n" +
+        lines.join("\n")
     );
     this.session.stream_title = get2dValue.byRange(rows, "W2"); // CSL
   }
@@ -175,7 +185,9 @@ class SpreadsheetManager {
 
     if (mappool.length) {
       this.session.mappool = mappool;
-      logger.info(`Found mappool <${mappoolName}> (size: ${mappool.length}) on sheet!`);
+      logger.info(
+        consolePrefix + `Found mappool <${mappoolName}> (size: ${mappool.length}) on sheet!`
+      );
     }
   }
 

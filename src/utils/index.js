@@ -1,3 +1,6 @@
+const applyMods = require("./difficultyCalculator");
+const get2dValue = require("./get2dValue");
+
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const getRandomInt = (max) => {
@@ -16,6 +19,8 @@ const waitForCondition = (conditionFn, interval = 100) => {
 };
 
 module.exports = {
+  applyMods,
+  get2dValue,
   delay,
   getRandomInt,
   waitForCondition,

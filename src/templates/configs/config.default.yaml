@@ -1,6 +1,10 @@
 # Overlay Server Port
 port: 3000
 
+# Log Level
+# error: 0, warn: 1, info: 2, http: 3, verbose: 4, debug: 5, silly: 6
+logLevel: 2
+
 # Stream Data Sheet
 sheet: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 

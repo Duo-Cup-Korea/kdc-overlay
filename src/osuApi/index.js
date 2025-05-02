@@ -4,6 +4,8 @@ const logger = require("winston");
 
 const osuApiTokenCachePath = path.join(process.cwd(), "credentials_osuapi.json");
 
+const consolePrefix = "[osu!api] ";
+
 exports = module.exports = function (config) {
   // You need to login only once on application start (auto renew token for v2)
   // https://github.com/cyperdark/osu-api-extended
@@ -19,12 +21,12 @@ exports = module.exports = function (config) {
 
       const result = await v2.users.details({ user: "peppy", mode: "osu", key: "@" });
       if (result?.id === 2) {
-        logger.info("[osu!api] Authentication success!");
+        logger.info(consolePrefix + "Authentication success!");
       } else {
-        logger.error("[osu!api] Authentication failure");
+        logger.error(consolePrefix + "Authentication failure");
       }
     } catch (error) {
-      logger.error(error);
+      logger.error(consolePrefix + error);
     }
   }
 

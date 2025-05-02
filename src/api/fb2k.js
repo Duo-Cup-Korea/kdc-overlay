@@ -33,7 +33,7 @@ exports = module.exports = function (config) {
 
   client.on("connect", () => {
     clearIntervalConnect();
-    logger.info("Successfully Connected to foobar2000 control server!");
+    logger.info(consolePrefix + "Successfully Connected to foobar2000 control server!");
     updateAlbumArt();
   });
 
@@ -78,14 +78,14 @@ exports = module.exports = function (config) {
 
   client.on("close", () => {
     if (!intervalConnect) {
-      logger.info("Disconnected from foobar2000 control server.");
+      logger.warn(consolePrefix + "Disconnected from foobar2000 control server.");
     }
     launchIntervalConnect();
   });
 
   client.on("error", () => {
     if (!intervalConnect) {
-      logger.info("foobar2000 control server connection error.");
+      logger.error(consolePrefix + "foobar2000 control server connection error.");
     }
     launchIntervalConnect();
   });

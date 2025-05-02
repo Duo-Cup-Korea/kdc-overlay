@@ -2,18 +2,20 @@ const http = require("http");
 const yaml = require("js-yaml");
 const express = require("express");
 const ip = require("ip");
+const { Server } = require("socket.io");
+const fs = require("fs");
+const path = require("path");
+const logger = require("winston");
+
 const app = express();
 const server = http.createServer(app);
-const { Server } = require("socket.io");
 const io = new Server(server, {
   cors: {
     origin: "*",
   },
 });
-const fs = require("fs");
-const path = require("path");
-const logger = require("winston");
-require("./logger")();
+
+const initializeLogger = require("./logger");
 
 async function Init() {
   const configFileExists = fs.existsSync(path.join(process.cwd(), "config.yaml"));
@@ -42,6 +44,9 @@ async function Init() {
     const config = yaml.load(
       fs.readFileSync(path.join(process.cwd(), "config.yaml"), { encoding: "utf8", flag: "r" })
     );
+
+    // initialize logger
+    initializeLogger(config.logLevel);
 
     // osu!api (v2) init
     require("./osuApi")(config);

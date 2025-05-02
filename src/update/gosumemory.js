@@ -3,8 +3,10 @@ const { v2 } = require("osu-api-extended");
 const path = require("path");
 const fs = require("fs");
 // eslint-disable-next-line no-unused-vars
-const difficultyCalculator = require("./difficultyCalculator");
+const difficultyCalculator = require("../utils/difficultyCalculator");
 const logger = require("winston");
+
+const consolePrefix = "[Gosumemory] ";
 
 let gosuWs;
 let connected = false;
@@ -14,18 +16,18 @@ exports = module.exports = function (config, session) {
     gosuWs = new WebSocket(`ws://${config.gosumemoryHost}:${config.gosumemoryPort}/ws`);
 
     gosuWs.onopen = () => {
-      logger.info("Successfully Connected to Gosumemory!");
+      logger.info(consolePrefix + "Successfully connected to Gosumemory!");
       // connected will be updated onmessage
     };
 
     gosuWs.onclose = () => {
-      logger.info("Gosumemory WebSocket Connection closed.");
+      logger.info(consolePrefix + "Gosumemory WebSocket connection closed.");
       connected = false;
       setTimeout(setupGosuWs, 1000);
     };
 
     gosuWs.onerror = () => {
-      logger.error("Gosumemory WebSocket Connection error.");
+      logger.error(consolePrefix + "Gosumemory WebSocket connection error.");
     };
 
     function updateAspect(gosuData) {
@@ -131,39 +133,6 @@ exports = module.exports = function (config, session) {
         },
       });
 
-      // tosu reads stats well but left for future when things should go wrong
-      /*
-      // Using osu!Api as gosumemory cannot pull metadata
-      if (mapIdTemp !== data.menu.bm.id) {
-        // Beatmap changed
-        v2.beatmap.id.details(data.menu.bm.id).then((response) => {
-          session.now_playing.osu.stats.cs = response.cs;
-          session.now_playing.osu.stats.ar = response.ar;
-          session.now_playing.osu.stats.od = response.accuracy;
-          session.now_playing.osu.stats.hp = response.drain;
-          session.now_playing.osu.stats.sr = response.difficulty_rating;
-          session.now_playing.osu.stats.bpm = response.bpm;
-          session.now_playing.osu.stats.length = response.total_length * 1000;
-          session.now_playing.osu.length = data.menu.bm.time.mp3;
-
-          if (response.id === data.menu.bm.id) {
-            // api call success
-            mapIdTemp = data.menu.bm.id;
-            modsTemp = -1;
-          }
-        });
-      }
-
-      if (modsTemp !== mods) {
-        // Mods changed
-        modsTemp = mods;
-        difficultyCalculator
-          .ApplyMods(mapIdTemp, session.now_playing.osu.stats, mods)
-          .then((modified) => {
-            session.now_playing.osu.stats.modified = modified;
-          });
-      }*/
-
       // Get original sr from the api
       if (mapIdTemp !== data.menu.bm.id) {
         // Beatmap changed
@@ -184,7 +153,10 @@ exports = module.exports = function (config, session) {
       if (tourney) {
         // Match gosumemory and overlay's slot count
         if (session.lobby.players.length !== data.tourney.ipcClients.length) {
-          logger.info("slot mismatch");
+          logger.warn(
+            consolePrefix +
+              `Client slots count mismatch between local(${session.lobby.players.length}) and gosumemory(${data.tourney.ipcClients.length}).`
+          );
           session.lobby.players = [];
           for (let i = 0; i < data.tourney.ipcClients.length; i++) {
             session.lobby.players.push({});
