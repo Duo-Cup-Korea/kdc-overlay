@@ -1,4 +1,4 @@
-exports = module.exports = class controls {
+class ControlEventHandlers {
   constructor(config, session) {
     this.config = config;
     this.session = session;
@@ -19,4 +19,6 @@ exports = module.exports = class controls {
   showPersonCards(showObject, io) {
     io.emit("showPersonCards", showObject);
   }
-};
+}
+
+exports = module.exports = { ControlEventHandlers };

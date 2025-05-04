@@ -3,15 +3,29 @@ const chokidar = require("chokidar");
 const csv = require("csvtojson");
 const logger = require("winston");
 
-const controlEventHandlers = require("./controlEventHandlers");
+const { ControlEventHandlers } = require("./eventHandlers");
 
 const peopleCsvPath = path.join(process.cwd(), "people.csv");
 
-exports = module.exports = class controls {
-  constructor(config, session) {
+class ControlManager {
+  constructor(config, session, io) {
     this.config = config;
     this.session = session;
-    this.handlers = new controlEventHandlers(config, session);
+    this.io = io;
+    this.handlers = new ControlEventHandlers(config, session);
+  }
+
+  init() {
+    this.setup();
+    this.CSL_watchPeopleList();
+  }
+
+  setup() {
+    this.io.on("connection", (socket) => {
+      socket.on("control", (res) => {
+        this.handleControlEvent(res, this.io);
+      });
+    });
   }
 
   CSL_watchPeopleList() {
@@ -38,4 +52,6 @@ exports = module.exports = class controls {
         break;
     }
   }
-};
+}
+
+exports = module.exports = { ControlManager };

@@ -1,5 +1,5 @@
 // const logger = require("winston");
-const { waitForCondition } = require("../utils");
+const { waitForCondition } = require("../../../utils");
 
 class SlottedSheetsFetcher {
   constructor(sheets, sheetId, slotDuration = 1100) {
@@ -81,4 +81,4 @@ class SlottedSheetsFetcher {
   }
 }
 
-module.exports = SlottedSheetsFetcher;
+module.exports = { SlottedSheetsFetcher };

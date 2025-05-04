@@ -10,6 +10,7 @@ const logger = require("winston");
 const { initializeLogger } = require("./logger");
 const { initializeOsuApi } = require("./osuApi");
 const { Apis } = require("./api");
+const { DataUpdater } = require("./update");
 
 const app = express();
 const server = http.createServer(app);
@@ -62,7 +63,9 @@ async function Init() {
   app.use("/api", api.router);
 
   // Info fetching and sending to browser
-  require("./update")(config, io.of("/update"));
+  const update = new DataUpdater(config, io.of("/update"));
+  update.init();
+  app.use("/json", update.router);
 
   // Run Server
   server.listen(config.port, () => {

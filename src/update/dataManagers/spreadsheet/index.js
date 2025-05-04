@@ -1,11 +1,12 @@
 const path = require("path");
+const chokidar = require("chokidar");
 const { google } = require("googleapis");
 const { v2 } = require("osu-api-extended");
 const eaw = require("eastasianwidth");
 const logger = require("winston");
 
-const SlottedSheetsFetcher = require("./sheetsApi");
-const { getRandomInt, get2dValue } = require("../utils");
+const { SlottedSheetsFetcher } = require("./sheetsApi");
+const { getRandomInt, get2dValue } = require("../../../utils");
 
 const auth = new google.auth.GoogleAuth({
   keyFile: path.join(process.cwd(), "credentials.json"),
@@ -35,6 +36,8 @@ class SpreadsheetManager {
   }
 
   async init() {
+    this.setup();
+
     const updateMatchInfoLoop = () => {
       this.updateMatchInfo().then(() => {
         setTimeout(updateMatchInfoLoop, interval + getRandomInt(100));
@@ -49,6 +52,12 @@ class SpreadsheetManager {
 
     CSL_UpdateOtherMatchesLoop();
     updateMatchInfoLoop();
+  }
+
+  setup() {
+    chokidar
+      .watch(path.join(process.cwd(), "config_stream.yaml"))
+      .on("all", () => this.matchChanged());
   }
 
   async updateTeams(teams) {
@@ -276,4 +285,4 @@ class SpreadsheetManager {
   }
 }
 
-exports = module.exports = SpreadsheetManager;
+exports = module.exports = { SpreadsheetManager };
