@@ -7,6 +7,9 @@ const fs = require("fs");
 const path = require("path");
 const logger = require("winston");
 
+const { initializeLogger } = require("./logger");
+const { initializeOsuApi } = require("./osuApi");
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -14,8 +17,6 @@ const io = new Server(server, {
     origin: "*",
   },
 });
-
-const initializeLogger = require("./logger");
 
 async function Init() {
   const configFileExists = fs.existsSync(path.join(process.cwd(), "config.yaml"));
@@ -40,34 +41,34 @@ async function Init() {
       );
     }
     process.exit();
-  } else {
-    const config = yaml.load(
-      fs.readFileSync(path.join(process.cwd(), "config.yaml"), { encoding: "utf8", flag: "r" })
-    );
-
-    // initialize logger
-    initializeLogger(config.logLevel);
-
-    // osu!api (v2) init
-    require("./osuApi")(config);
-
-    // Static Folder
-    app.use("/", express.static(path.join(__dirname, "../public")));
-
-    // API
-    const api = require("./api")(config, logger);
-    app.use("/api", api);
-
-    // Info fetching and sending to browser
-    require("./update")(config, io.of("/update"));
-
-    // Run Server
-    server.listen(config.port, () => {
-      logger.info(
-        `osu!mania Long Note Tournament 4 overlay backend server running at http://${ip.address()}:${config.port}/`
-      );
-    });
   }
+
+  const config = yaml.load(
+    fs.readFileSync(path.join(process.cwd(), "config.yaml"), { encoding: "utf8", flag: "r" })
+  );
+
+  // initialize logger
+  initializeLogger(config.logLevel);
+
+  // osu!api (v2) init
+  initializeOsuApi(config);
+
+  // Static Folder
+  app.use("/", express.static(path.join(__dirname, "../public")));
+
+  // API
+  const api = require("./api")(config, logger);
+  app.use("/api", api);
+
+  // Info fetching and sending to browser
+  require("./update")(config, io.of("/update"));
+
+  // Run Server
+  server.listen(config.port, () => {
+    logger.info(
+      `osu!mania Long Note Tournament 4 overlay backend server running at http://${ip.address()}:${config.port}/`
+    );
+  });
 }
 
 Init();

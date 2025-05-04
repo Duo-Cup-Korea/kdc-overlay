@@ -3,7 +3,7 @@ const { format } = require("date-fns");
 const fs = require("fs");
 const path = require("path");
 
-exports = module.exports = function (logLevel) {
+function initializeLogger(logLevel) {
   const logDir = path.join(process.cwd(), "logs");
   if (!fs.existsSync(logDir)) {
     fs.mkdirSync(logDir);
@@ -30,4 +30,6 @@ exports = module.exports = function (logLevel) {
       }),
     ],
   });
-};
+}
+
+exports = module.exports = { initializeLogger };
