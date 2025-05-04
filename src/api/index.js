@@ -1,9 +1,14 @@
 const express = require("express");
-const router = express.Router();
 
-exports = module.exports = function (config) {
-  const fb2k = require("./fb2k")(config);
-  router.use("/fb2k", fb2k);
+const { Fb2kApi } = require("./fb2k");
 
-  return router;
-};
+class Apis {
+  constructor(config) {
+    this.router = express.Router();
+    this.fb2k = new Fb2kApi(config.fb2k);
+
+    this.router.use("/fb2k", this.fb2k.router);
+  }
+}
+
+exports = module.exports = { Apis };

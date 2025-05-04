@@ -9,6 +9,7 @@ const logger = require("winston");
 
 const { initializeLogger } = require("./logger");
 const { initializeOsuApi } = require("./osuApi");
+const { Apis } = require("./api");
 
 const app = express();
 const server = http.createServer(app);
@@ -57,8 +58,8 @@ async function Init() {
   app.use("/", express.static(path.join(__dirname, "../public")));
 
   // API
-  const api = require("./api")(config, logger);
-  app.use("/api", api);
+  const api = new Apis(config);
+  app.use("/api", api.router);
 
   // Info fetching and sending to browser
   require("./update")(config, io.of("/update"));
