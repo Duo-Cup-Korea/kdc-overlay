@@ -67,5 +67,4 @@ function byRange(data, range) {
   return byIndex(data, parsedRange);
 }
 
-module.exports.byIndex = byIndex;
-module.exports.byRange = byRange;
+exports = module.exports = { byIndex, byRange };

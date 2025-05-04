@@ -14,7 +14,7 @@ const ms_step = {
   ar_2: 150,
 };
 
-exports = module.exports = async function (mapId, stats, modsNum) {
+async function applyMods(mapId, stats, modsNum) {
   const dt = (modsNum >> 6) % 2 === 1;
   const ht = (modsNum >> 8) % 2 === 1;
   const hr = (modsNum >> 4) % 2 === 1;
@@ -90,4 +90,6 @@ exports = module.exports = async function (mapId, stats, modsNum) {
   }
 
   return { cs, ar, od, hp, sr, bpm, length };
-};
+}
+
+exports = module.exports = { applyMods };
