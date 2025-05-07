@@ -1,4 +1,3 @@
-# omln4-overlay
+# kdc-overlay
 
-security warning: the compiled executable you may create contains credentials to your Google test account, which can be extracted easily.
-Never distribute it outside!
+Stream overlay backend for broadcasting the osu! tournament [Duo Cup: KOREA](https://osu.ppy.sh/community/forums/topics/2076171?n=1).

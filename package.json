@@ -1,6 +1,6 @@
 {
-  "name": "omln4-overlay",
-  "version": "1.0.0",
+  "name": "kdc-overlay",
+  "version": "2024.2.0",
   "engines": {
     "node": "22"
   },
@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf dist/",
-    "build": "npm run clean && pkg --compress GZip . && echo @echo off >> dist/omln4-overlay.cmd && echo omln4-overlay.exe >> dist/omln4-overlay.cmd && echo pause >> dist/omln4-overlay.cmd",
+    "build": "npm run clean && pkg --compress GZip . && echo @echo off >> dist/kdc-overlay.cmd && echo kdc-overlay.exe >> dist/kdc-overlay.cmd && echo pause >> dist/kdc-overlay.cmd",
     "postinstall": "patch-package",
     "lint": "eslint .",
     "format": "prettier --write ."

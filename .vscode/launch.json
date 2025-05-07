@@ -7,7 +7,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "start omln4-overlay",
+      "name": "start kdc-overlay",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/src/index.js",
       "outputCapture": "std"
