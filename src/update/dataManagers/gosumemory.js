@@ -38,7 +38,7 @@ class GosumemoryManager {
     this.gosuWs.onclose = () => {
       logger.info(consolePrefix + "Gosumemory WebSocket connection closed.");
       this.connected = false;
-      setTimeout(this.setupGosuWs, 1000);
+      setTimeout(() => this.init(), 1000);
     };
 
     this.gosuWs.onerror = () => {

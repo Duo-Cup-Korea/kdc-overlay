@@ -28,7 +28,7 @@ class controlserverInterface {
 
     this.client.on("close", () => {
       if (!this.intervalConnect) {
-        logger.warn(consolePrefix + "Disconnected from foobar2000 control server.");
+        logger.warn(consolePrefix + "Disconnected from foobar2000 control server. (close)");
       }
       this.launchIntervalConnect();
     });
@@ -40,7 +40,10 @@ class controlserverInterface {
       this.launchIntervalConnect();
     });
 
-    this.client.on("end", this.launchIntervalConnect);
+    this.client.on("end", () => {
+      logger.warn(consolePrefix + "Disconnected from foobar2000 control server. (end)");
+      this.launchIntervalConnect();
+    });
 
     this.client.on("data", (data) => this.onData(data));
   }
@@ -54,7 +57,7 @@ class controlserverInterface {
 
   launchIntervalConnect() {
     if (this.intervalConnect) return;
-    this.intervalConnect = setInterval(this.connect, 5000);
+    this.intervalConnect = setInterval(() => this.connect(), 5000);
   }
 
   clearIntervalConnect() {
