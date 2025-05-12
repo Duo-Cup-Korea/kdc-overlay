@@ -134,12 +134,22 @@ class GosumemoryManager {
       // Beatmap changed
       let taskDone = true;
 
-      v2.beatmaps.details({ type: "difficulty", id: data.menu.bm.id }).then((res) => {
-        this.session.now_playing.osu.stats.sr = res?.attributes?.star_rating;
-        if (!this.session.now_playing.osu.stats.sr) {
-          taskDone = false;
-        }
-      });
+      if (data.menu.bm.id) {
+        logger.verbose(`[osu!api] Going to query beatmap id ${data.menu.bm.id}!`);
+        v2.beatmaps
+          .details({ type: "difficulty", id: data.menu.bm.id })
+          .then((res) => {
+            this.session.now_playing.osu.stats.sr = res?.attributes?.star_rating;
+            if (!this.session.now_playing.osu.stats.sr) {
+              taskDone = false;
+            }
+          })
+          .catch((err) => {
+            logger.error(
+              `[osu!api] API query failed for the beatmap ${data.menu.bm.id}: ${err.message}`
+            );
+          });
+      }
 
       if (taskDone) this.mapIdTemp = data.menu.bm.id;
     }
@@ -218,7 +228,10 @@ class GosumemoryManager {
 
   resetGosuTimeout() {
     clearTimeout(this.timeout);
-    this.timeout = setTimeout(() => (this.connected = false), 1000);
+    this.timeout = setTimeout(() => {
+      logger.warn(consolePrefix + "Connection timed out.");
+      this.connected = false;
+    }, 1000);
   }
 
   updateAspect(gosuData) {
@@ -228,6 +241,10 @@ class GosumemoryManager {
         // If failing to read the tournament.cfg file, fall back to the default value of 1
         // It can be because the file disappeared somehow,
         // or gosumemory(tosu) and tournament client is running remotely.
+        logger.error(
+          consolePrefix +
+            "Cannot read tournament.cfg to get the aspect value. Defaulting to 1. Is Gosumemory running remotely?"
+        );
         this.session.lobby.aspect = 1;
         return;
       }
