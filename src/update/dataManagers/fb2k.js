@@ -5,7 +5,7 @@ class Fb2kManager {
   }
 
   init() {
-    setInterval(this.updateData, 200);
+    setInterval(() => this.updateData(), 200);
   }
 
   updateData() {
