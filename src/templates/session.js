@@ -57,11 +57,18 @@ exports = module.exports = {
   },
   mappool: [],
   progress: {
-    curmap: 0,
-    first_pick: 0,
-    first_ban: 0,
-    order: [
-      // require("banpick")
+    phase: 1,
+    phases: [
+      {
+        first_pick: 0,
+        order: [
+          // require("banpick")
+        ],
+      },
+      {
+        first_pick: 0,
+        order: [],
+      },
     ],
   },
   chat: [],

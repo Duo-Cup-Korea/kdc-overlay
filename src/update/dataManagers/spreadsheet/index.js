@@ -44,13 +44,6 @@ class SpreadsheetManager {
       });
     };
 
-    const CSL_UpdateOtherMatchesLoop = () => {
-      this.CSL_UpdateOtherMatches().then(() => {
-        setTimeout(CSL_UpdateOtherMatchesLoop, interval + getRandomInt(100));
-      });
-    };
-
-    CSL_UpdateOtherMatchesLoop();
     updateMatchInfoLoop();
   }
 
@@ -73,24 +66,22 @@ class SpreadsheetManager {
     const teamsData = new Array(teams.length);
 
     for (let i = 1; i < rows.length; i++) {
-      allTeamsData[rows[i][labels.Index]] = {
-        id: parseInt(rows[i][labels.uid1]),
-        nick: rows[i][labels.Player1],
-        rank: 0,
+      const teamData = {
+        name: rows[i][labels.TeamName],
+        acronym: rows[i][labels.Acronym],
+        seed: parseInt(rows[i][labels.Seed]),
+        players: [
+          { id: parseInt(rows[i][labels.uid1]), nick: rows[i][labels.Player1], rank: 0 },
+          { id: parseInt(rows[i][labels.uid2]), nick: rows[i][labels.Player2], rank: 0 },
+        ],
         comment: rows[i][labels.comment],
       };
-      if (teams.includes(parseInt(rows[i][labels.Index]))) {
-        teamsData[teams.indexOf(parseInt(rows[i][labels.Index]))] = {
-          name: rows[i][labels.TeamName],
-          acronym: rows[i][labels.Acronym],
-          seed: parseInt(rows[i][labels.Seed]),
-          players: [
-            { id: parseInt(rows[i][labels.uid1]), nick: rows[i][labels.Player1], rank: 0 },
-            { id: parseInt(rows[i][labels.uid2]), nick: rows[i][labels.Player2], rank: 0 },
-          ],
-          comment: rows[i][labels.comment],
-        };
-      }
+
+      if (!teamData) continue;
+
+      allTeamsData.push(teamData);
+      if (teams.includes(parseInt(rows[i][labels.Index])))
+        teamsData[teams.indexOf(parseInt(rows[i][labels.Index]))] = teamData;
     }
 
     for (let i = 0; i < teamsData.length; i++) {
@@ -213,19 +204,18 @@ class SpreadsheetManager {
     this.session.bracket = get2dValue.byRange(rows, "W7");
     this.session.mappool_name = get2dValue.byRange(rows, "G2");
     this.session.bo = parseInt(get2dValue.byRange(rows, "W4"));
-    // session.schedule = get2dValue.byRange(rows, "W3");
-    this.matchSchedule = get2dValue.byRange(rows, "W3"); // CSL
-    // this.session.stream_title = get2dValue.byRange(rows, "W2");  // CSL temporal change: title set control - only update stream_title when match has changed
+    this.session.schedule = get2dValue.byRange(rows, "W3");
 
     // Get Match Progress Data
-    const progressData = get2dValue.byRange(rows, "B3:C");
+    const progressData = get2dValue.byRange(rows, "B2:C");
 
-    this.session.progress.curmap = parseInt(progressData[0][1]);
-    this.session.progress.first_ban = parseInt(progressData[1][1]);
-    this.session.progress.first_pick = parseInt(progressData[2][1]);
+    this.session.progress.phase = parseInt(progressData[0][1]);
+    this.session.progress.phases[0].first_pick = parseInt(progressData[2][1]);
+    this.session.progress.phases[1].first_pick = parseInt(progressData[3][1]);
 
     let order = [];
-    for (let i = 3; i < progressData.length; i++) {
+    let phase = 0;
+    for (let i = 4; i < progressData.length; i++) {
       if (!progressData[i][1]) {
         // Stop reading if empty
         break;
@@ -233,55 +223,24 @@ class SpreadsheetManager {
 
       const pick = JSON.parse(progressData[i][1]);
 
-      if (pick.pick !== -1) {
+      if (progressData[i][0].startsWith("phase_")) {
+        // change phase
+        phase = parseInt(progressData[i][0].substring(6)) - 1;
+        order.push([]);
+      }
+
+      if (!(pick.pick === -1 && pick.team === -1)) {
         // pass if invalid pick
-        order.push(pick);
+        order[phase].push(pick);
       }
     }
 
-    // apply to session
-    this.session.progress.order = order;
-  }
+    order[order.length - 1].pop(); // last map is TB
 
-  async CSL_UpdateOtherMatches() {
-    if (this.session.type !== "match") return; // Not accessing the sheet if not in match mode
-
-    const range = "Schedule"; // Specifying only the sheet name (which is same with the match code) as range to get the whole cells in the sheet
-    const res = await this.fetcher.fetchRange(range);
-
-    const rows = res.values; // Got data from the sheet
-
-    const labels = getColumnLabels(rows[0]);
-
-    const matches = {};
-
-    for (let i = 1; i < rows.length; i++) {
-      const matchCode = rows[i][labels.Match];
-      if (matchCode.startsWith("M")) {
-        matches[matchCode] = {
-          code: matchCode,
-          bracket: (() => {
-            switch (matchCode) {
-              case "M1":
-              case "M2":
-                return "Quarterfinals";
-              case "M3":
-              case "M4":
-                return "Semifinals";
-              case "M5":
-                return "Final";
-              default:
-                return "";
-            }
-          })(),
-          schedule: rows[i][labels.iso],
-          players: rows[i].slice(7, 9).map((x) => parseInt(x)),
-          result: rows[i].slice(13, 15).map((x) => parseInt(x)),
-        };
-      }
+    for (let i = 0; i < order.length; i++) {
+      // apply to session
+      this.session.progress.phases[i].order = order[i];
     }
-
-    Object.assign(this.session.CSL.matches, matches);
   }
 }
 
