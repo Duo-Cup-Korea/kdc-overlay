@@ -48,9 +48,12 @@ class SpreadsheetManager {
   }
 
   setup() {
-    chokidar
-      .watch(path.join(process.cwd(), "config_stream.yaml"))
-      .on("all", () => this.matchChanged());
+    chokidar.watch(path.join(process.cwd(), "config_stream.yaml")).on("all", () => {
+      if (this.session.type === "match") {
+        // Fetch match info only when match mode
+        this.matchChanged();
+      }
+    });
   }
 
   async updateTeams(teams) {
