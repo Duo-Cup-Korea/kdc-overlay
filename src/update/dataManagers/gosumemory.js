@@ -69,7 +69,10 @@ class GosumemoryManager {
     let code = "";
     for (let i = 0; i < this.session.mappool.length; i++) {
       // Check if current map is mappool
-      if (this.session.mappool[i].map_id === data.menu.bm.id) {
+      if (
+        (data.menu.bm.id && this.session.mappool[i].map_id === data.menu.bm.id) || // Current map is uploaded map and has id
+        this.session.mappool[i].md5 === data.menu.bm.md5 // Custom map but md5 matches
+      ) {
         code = this.session.mappool[i].code;
         break;
       }
