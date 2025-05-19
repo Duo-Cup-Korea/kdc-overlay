@@ -18,7 +18,7 @@ async function start(config) {
   });
 
   // Static Folder
-  app.use("/", express.static(path.join(__dirname, "../public")));
+  app.use("/", express.static(path.join(__dirname, "public")));
 
   // API
   const api = new Apis(config);
