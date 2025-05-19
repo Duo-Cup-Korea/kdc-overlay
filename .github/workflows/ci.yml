@@ -39,8 +39,8 @@ jobs:
 
       - name: Install frontend to the public folder
         run: |
-          mkdir public
-          unzip kdc-overlay-front.zip -d public
+          mkdir -p src/public
+          unzip kdc-overlay-front.zip -d src/public
 
       - name: Build
         run: npm run build --if-present
