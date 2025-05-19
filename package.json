@@ -4,6 +4,7 @@
   "engines": {
     "node": "22"
   },
+  "type": "commonjs",
   "description": "",
   "main": "src/index.js",
   "scripts": {
