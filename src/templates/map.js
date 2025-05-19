@@ -1,5 +1,6 @@
 exports = module.exports = {
   map_id: 0,
+  md5: "",
   mapset_id: 0,
   code: "",
   mods: 0,

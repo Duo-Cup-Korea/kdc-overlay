@@ -7,9 +7,18 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "start kdc-overlay",
+      "name": "Start kdc-overlay",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/src/index.js",
+      "outputCapture": "std"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Generate mappool.json",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/src/index.js",
+      "args": ["mappoolgen"],
       "outputCapture": "std"
     }
   ]

@@ -95,6 +95,7 @@ class GosumemoryManager {
     // Update now playing data in session
     Object.assign(this.session.now_playing.osu, {
       map_id: data.menu.bm.id,
+      md5: data.menu.bm.md5,
       mapset_id: data.menu.bm.set,
       mods: mods,
       code: code,
