@@ -9,7 +9,7 @@ const { initializeOsuApi } = require("./osuApi");
 const { start } = require("./entry");
 const { mappoolgen } = require("./scripts/mappoolgen");
 
-const VERSION = "KDC Overlay v2025.0.0";
+const VERSION = "KDC Overlay v2025.0.1";
 const HELP = `
 kdc-overlay
 Duo Cup: KOREA 2025 Broadcasting Tool
